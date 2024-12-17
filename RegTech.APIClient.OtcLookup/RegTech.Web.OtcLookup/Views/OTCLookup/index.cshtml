@@ -1,0 +1,139 @@
+@{
+    ViewData["Title"] = "OTC Lookup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="/css/otclookup.css" rel="stylesheet" />
+
+<!-- Include Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include jQuery UI CSS for Datepicker -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+<div class="navbar">
+    <div class="navbar-content">
+        <div class="title">
+            REGTECH | DATAHUB <span>DEMO-SITE</span>
+        </div>
+        <div class="right-section">
+            <a href="http://www.regtechdatahub.com" target="_blank">
+                <img src="~/images/Logo.png" alt="Logo" class="logo">
+            </a>
+
+            @if (ViewBag.IsLoggedIn == true)
+            {
+                <input type="image" src="~/images/Logout.png" alt="Logout" title="Logout" onclick="logout()" width="22" height="22" style="margin-left: 20px"/>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="bottom-line"></div>
+
+<div class="container" style="padding: 20px; background-color: #191c2b; text-align: center;">
+    <img src="~/images/OTC-lookup.png" sizes="(max-width: 1024px) 100vw, 1024px" fetchpriority="high" decoding="async">
+</div>
+
+<div class="container">
+    <div id="parameterSection">
+        <button id="extraOptionsButton">Version</button>
+        <div id="extraOptions">
+            <label for="templateSearchDirection" class="form-label">
+                <span style="font-weight: bold;">Version:</span>
+            </label>
+            <select id="templateSearchDirection" class="form-select">
+                <option value="HighestToLowest" selected>Highest to Lowest</option>
+                <option value="LowestToHighest">Lowest to Highest</option>
+            </select>
+
+
+            <label for="expiryDatesSpans" class="form-label">
+                <span style="font-weight: bold;">ExpiryDate Span:</span>
+            </label>
+            <select id="expiryDatesSpans" class="form-select">
+                <option value="0">0</option>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+            </select>
+            <label for="instrumentLimit" class="form-label">
+                <span style="font-weight: bold;">InstrumentLimit:</span>
+            </label>
+            <select id="instrumentLimit" class="form-select">
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+            </select>
+        </div>
+    </div>
+    <form id="searchForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="assetClass">Asset Class</label>
+                <select id="assetClass" name="assetClass" class="select2" onchange="updateInstrumentType(this.value)">
+                    <option value="">Choose an Asset Class</option>
+                    @foreach (var option in ViewBag.AssetClasses)
+                    {
+                        <option value="@option">@option</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="instrumentType">Instrument Type</label>
+                <select id="instrumentType" name="instrumentType" class="select2" disabled onchange="updateUseCase(this.value)">
+                    <option value="">Choose an Instrument Type</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="useCase">Use Case</label>
+                <select id="useCase" name="useCase" class="select2" disabled onchange="updateLevel(this.value); setDefaultLevel(); performSearch();">
+                    <option value="">Choose a Use Case</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="level">Level</label>
+                <select id="level" name="level" class="select2" disabled onchange="updateTemplateVersion(this.value); performSearch();">
+                    <option value="">Choose a Level</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="templateVersion">Template Version</label>
+                <select id="templateVersion" name="templateVersion" class="select2" disabled onchange="performSearch()">
+                    <option value="">Could be left blank</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <div id="dynamicFields"></div>
+    <div id="button-container" style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 30px;">
+        <button type="button" class="button" id="find-button" onclick="performFind()" style="display: none;">
+            Find
+        </button>
+        <button type="button" class="button" id="clear-results-button" onclick="clearResults()" style="display: none;">
+            Clear Results
+        </button>
+    </div>
+
+    <div id="resultSection">
+        <div id="results"></div>
+    </div>
+</div>
+
+<footer class="border-top footer text-muted">
+    <div class="container">© 2024 - CAPITAL MARKET PARTNERS A/S</div>
+</footer>
+
+<script>
+    // Embed the serialized JSON data into a global variable
+    window.allData = @Html.Raw(ViewBag.AllData);
+</script>
+
+@section Scripts {
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="~/js/otclookup.js"></script>
+}

@@ -1,0 +1,91 @@
+@{
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- White Navbar -->
+    <div class="navbar">
+        <div class="navbar-content">
+            <div class="title">
+                REGTECH | DATAHUB <span>DEMO-SITE</span>
+            </div>
+            <div class="right-section">
+                <a href="http://www.regtechdatahub.com" target="_blank">
+                    <img src="~/images/Logo.png" alt="Logo" class="logo">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Line -->
+    <div class="bottom-line"></div>
+
+    <!-- Black Background Section -->
+    <div class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="narrowBox">
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger">@ViewBag.Error</div>
+                        }
+
+                        <form method="post">
+                            <h5 class="mb-4">Login</h5>
+
+                            <div class="form-group">
+                                <label class="form-label" for="Username">Username</label>
+                                <input type="text" class="form-control" id="Username" name="username" required autofocus>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" for="Password">Password</label>
+                                <input type="password" class="form-control" id="Password" name="password" required>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary w-100">Login</button>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" id="RememberLogin" name="remember_me">
+                                <label class="form-check-label" for="RememberLogin">Remember Me</label>
+                            </div>
+
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle help-button" type="button"
+                                        id="helpDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span>Help</span>
+                                    <ion-icon name="help-circle-outline"></ion-icon>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="helpDropdown">
+                                    <li><a class="dropdown-item disabled" href="#">Login »</a></li>
+                                    <li><a class="dropdown-item" href="https://api.regtechdatahub.com/Account/RegisterAccount">First time login »</a></li>
+                                    <li><a class="dropdown-item" href="https://api.regtechdatahub.com/Account/ForgotPassword">Forgot Password »</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><button class="dropdown-item" type="button" onclick="window.location.href='/login'">Cancel »</button></li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="~/js/site.js"></script>
+</body>
+</html>

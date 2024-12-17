@@ -1,0 +1,99 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.navbar-content {
+    width: 1320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #000000;
+}
+
+.title span {
+    color: #ff6600;
+}
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    cursor: pointer;
+}
+
+.bottom-line {
+    height: 2px;
+    background-color: #ddd;
+}
+
+.main-content {
+    background-color: #191c2b;
+    min-height: calc(100vh - 80px);
+    padding: 40px 0;
+}
+
+.narrowBox {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-primary {
+    background-color: #ff6600;
+    border-color: #ff6600;
+}
+
+    .btn-primary:hover {
+        background-color: #e65c00;
+        border-color: #e65c00;
+    }
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.help-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+    .help-button ion-icon {
+        font-size: 1.2em;
+    }
+
+.dropdown-item {
+    cursor: pointer;
+}
+
+    .dropdown-item.disabled {
+        color: #6c757d;
+        cursor: default;
+    }

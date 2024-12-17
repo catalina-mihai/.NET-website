@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\RegTech.Web.OtcLookup.props" />
+</Project>

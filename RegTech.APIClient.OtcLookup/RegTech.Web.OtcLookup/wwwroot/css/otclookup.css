@@ -1,0 +1,566 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    width: 80%;
+    background-color: #ddd;
+    left: 10%;
+}
+
+.logo-container {
+    font-weight: bold;
+    color: #ff6600;
+    font-size: 24px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+    .logo-container span {
+        padding: 0 8px;
+        color: #000000;
+        font-weight: bold;
+        color: #ff6600;
+        font-size: 24px;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+
+
+.logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.container {
+    position: relative;
+    max-width: 1320px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 0;
+    overflow: visible;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: visible;
+}
+
+.form-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+}
+
+.left-form,
+.right-form {
+    flex: 1;
+    min-width: 300px;
+}
+
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-evenly;
+}
+
+.form-group label,
+#extraOptions label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+    .form-group label:hover,
+    #extraOptions label:hover {
+        cursor: pointer;
+    }
+
+.form-group, #extraOptions .form-group {
+    flex: 1;
+    min-width: 180px;
+    max-width: 220px;
+    border: 1px solid #6c757d;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+}
+
+select, input[type="text"], input[type="number"], input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #191c2b;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+    .button:hover {
+        background-color: #ff6600 !important;
+    }
+
+#extraOptionsButton {
+    font-size: 14px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f15a24;
+    color: white;
+    border: none;
+    margin-top: 0px;
+    margin-left: auto;
+    margin-right: right;
+    display: block;
+    cursor: pointer;
+}
+
+#extraOptions select {
+    width: 150px;
+    height: 30px;
+    font-size: 14px;
+    padding: 2px 6px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* Container for the extra options dropdown */
+#extraOptions {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    padding: 20px;
+    width: 200px;
+    border: 1px solid #6c757d;
+    border-radius: 5px;
+    background-color: white;
+    top: 70px;
+    left: 1200px;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
+}
+
+    #extraOptions.show {
+        display: block;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+#extraOptions input[type="text"],
+#extraOptions input[type="number"],
+#extraOptions input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+#extraOptions textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.nested-table {
+    cursor: pointer;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 2px;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+    font-size: 16px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table tr:hover {
+    background-color: #ff6600;
+}
+
+table.has-data tr:hover {
+    background-color: #ff6600;
+}
+
+table:not(.has-data) tr:hover {
+    background-color: transparent !important;
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 0.85em;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+}
+
+    .copy-btn:hover {
+        color: #71A6FC;
+        text-decoration: none;
+    }
+
+.ui-datepicker td span,
+.ui-datepicker td a {
+    display: block;
+    padding: 0.2em;
+    text-align: center;
+    text-decoration: none;
+}
+
+.ui-datepicker tr:hover {
+    background-color: transparent !important;
+}
+
+.ui-datepicker td a:hover {
+    background: #ff6600 !important;
+    background: #ff6600 !important;
+    color: white !important;
+}
+
+.ui-datepicker td a.ui-state-active {
+    background: #6c757d;
+    color: white;
+    border: 1px solid #ff6600;
+}
+
+.ui-datepicker td a.ui-state-highlight {
+    border: 1px solid #ff6600;
+}
+
+.ui-datepicker {
+    z-index: 1000 !important;
+}
+
+#dynamicFields {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    overflow: hidden;
+    padding: 0px;
+    box-sizing: border-box;
+    margin-top: 15px;
+}
+
+
+/* adjust the horizontal row gap */
+.horizontal-row {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.dynamic-fields-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+
+
+#dynamicFields .form-group {
+    min-width: 170px;
+    max-width: 220px;
+    max-width: 220px;
+    box-sizing: border-box;
+}
+
+#dynamicFields select, #dynamicFields input, #dynamicFields textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#dynamicFields label {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+#dynamicFields textarea {
+    resize: vertical;
+    min-height: 38px;
+}
+
+@media (max-width: 600px) {
+    #dynamicFields .form-group {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    th, td {
+        font-size: 14px;
+    }
+}
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+    #extraOptions {
+        right: 5px;
+        width: 180px;
+    }
+}
+
+/* Adjustments for larger screens */
+@media (min-width: 1200px) {
+    #extraOptions {
+        right: 20px;
+    }
+}
+
+.searchable-select {
+    position: relative;
+    margin-top: 10px;
+    max-width: 200px;
+}
+
+    .searchable-select input {
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+.dropdown-options {
+    position: absolute;
+    z-index: 10;
+    background: white;
+    border: 1px solid #6c757d;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+}
+
+    .dropdown-options div {
+        padding: 8px;
+        cursor: pointer;
+    }
+
+        .dropdown-options div:hover {
+            background-color: #6c757d;
+        }
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.navbar-content {
+    width: 1320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #000000;
+}
+
+    .title span {
+        color: #ff6600;
+    }
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.bottom-line {
+    height: 2px;
+    background-color: #ddd;
+}
+
+/* Select2 Customization */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #ff6600 !important;
+    color: white;
+}
+
+/* Optional: Style the clear button (×) */
+.select2-container--default .select2-selection--single .select2-selection__clear:hover {
+    color: #ff6600;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+.navbar-content {
+    width: 1320px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* responsive image while allowing it to stay within the container */
+.responsive-image {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #000000;
+}
+
+    .title span {
+        color: #ff6600;
+    }
+
+.right-section {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    max-width: 150px;
+    height: auto;
+    cursor: pointer;
+}
+
+.bottom-line {
+    height: 2px;
+    background-color: #ddd;
+}
+
+select:disabled {
+    background-color: #f5f5f5;
+    color: #6c757d;
+}
+
+/* Add these CSS rules */
+#resultSection {
+    margin-top: 40px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 2px;
+    margin-bottom: 20px;
+}
+.collapsible-header.table-header {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+    .collapsible-header.table-header:hover {
+        background-color: #e9ecef;
+    }
+
+.collapsible-header .header-table {
+    border-collapse: collapse;
+}
+
+.collapsible-header .fas {
+    margin-right: 10px;
+    transition: transform 0.2s;
+}
+
+/* Rotate arrow when content is expanded */
+.collapsible-header.active .fas {
+    transform: rotate(90deg);
+}

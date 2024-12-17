@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - My Application</title>
+
+    <!-- Global CSS -->
+    <link href="~/css/global.css" rel="stylesheet" />
+
+    <!-- View-Specific CSS -->
+</head>
+<body>
+    <header>
+        <!-- Header content -->
+    </header>
+    <main role="main" class="container">
+        @RenderBody()
+    </main>
+    <footer class="border-top footer text-muted">
+        <div class="container">© 2024 - My Application</div>
+    </footer>
+
+    <!-- Global Scripts -->
+    <script src="~/js/global.js"></script>
+
+    <!-- View-Specific Scripts -->
+</body>
+</html>
+
+@RenderSection("styles", required: false)
+@RenderSection("Scripts", required: false)
