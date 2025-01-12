@@ -1,4 +1,4 @@
-﻿const allData = window.allData;
+const allData = window.allData;
 
 // Define matchCustom function to customize Select2 dropdown search behavior
 function matchCustom(params, data) {
@@ -328,7 +328,7 @@ function performFind() {
         useCase: $('#useCase').val(),
         level: $('#level').val(),
         templateVersion: $('#templateVersion').val(),
-        
+
     });
 
     fetch('/find', {
@@ -348,27 +348,27 @@ function performFind() {
             if (data.redirectUrl) {
                 window.location.href = data.redirectUrl;
             } else {
-                    console.log("Raw response from server:", data);
-                    console.log("Response type:", typeof data);
+                console.log("Raw response from server:", data);
+                console.log("Response type:", typeof data);
 
-                    // Extract the correlation ID (assuming it's always provided)
-                    const headers = Array.isArray(data.headers) ? data.headers : [];
-                    const correlationId = headers.find(obj => obj.name.includes('x-correlation-id'))?.value;
+                // Extract the correlation ID (assuming it's always provided)
+                const headers = Array.isArray(data.headers) ? data.headers : [];
+                const correlationId = headers.find(obj => obj.name.includes('x-correlation-id'))?.value;
 
-                    // Handle both the direct data case and the nested data case
-                    let resultData;
-                    try {
-                        resultData = data.content ? JSON.parse(data.content) : data;
-                    } catch (parseError) {
-                        console.error("Error parsing data.content:", parseError);
-                        resultData = data;
-                    }
-
-                    console.log("Has instruments:", resultData.instruments ? Object.keys(resultData.instruments).length : 0);
-                    console.log("Final data to display:", resultData);
-
-                    displayResults(resultData, correlationId);
+                // Handle both the direct data case and the nested data case
+                let resultData;
+                try {
+                    resultData = data.content ? JSON.parse(data.content) : data;
+                } catch (parseError) {
+                    console.error("Error parsing data.content:", parseError);
+                    resultData = data;
                 }
+
+                console.log("Has instruments:", resultData.instruments ? Object.keys(resultData.instruments).length : 0);
+                console.log("Final data to display:", resultData);
+
+                displayResults(resultData, correlationId);
+            }
         })
         .catch(error => {
             console.error('Error fetching instruments:', error);
@@ -378,6 +378,7 @@ function performFind() {
 }
 
 function gatherDynamicFields() {
+    debugger;
     const dynamicFields = {};
     // Loop through all dynamically generated form fields
     $('#dynamicFields .form-group').each(function () {
@@ -405,7 +406,15 @@ function gatherDynamicFields() {
 }
 // Function to copy row content to the clipboard
 function copyRowContentToClipboard(rowElement) {
-    const text = $(rowElement).find('td:last').text().trim(); // Get the text of the last <td> in the row
+    let text;
+
+    if ($(rowElement).closest('.collapsible-results').length > 0) {
+        // Specific logic for collapsible results
+        text = $(rowElement).text().trim(); // Directly get the clicked element's text
+    } else {
+        // Default logic for other parts of the code
+        text = $(rowElement).find('td:last').text().trim(); // Get the text of the last <td> in the row
+    }
 
     // Check if the content is valid
     if (text && text !== "N/A") {
@@ -482,9 +491,6 @@ function copyRowContentToClipboard(rowElement) {
         });
     }
 }
-
-
-
 function displayResults(data, correlationId) {
     console.log("Data received in displayResults:", data);
     const resultsDiv = $('#results');
@@ -504,41 +510,61 @@ function displayResults(data, correlationId) {
         const templateInfo = `${assetClass}.${instrumentType}.${useCase}.${displayLevel}.${templateVersion}`;
 
         const instrumentsReceived = data.instrumentCount;
-        const instrumentLimit = $('#instrumentLimit').val() || 'N/A';
+        const instrumentLimit = parseInt($('#instrumentLimit').val() || '0');
+
+        // Determine the color based on instrument count
+        let headerColor = '';
+        if (instrumentsReceived === 0) {
+            headerColor = 'red'; // No results
+        } else if (instrumentsReceived === instrumentLimit) {
+            headerColor = '#FFAA33'; // Maximum results
+        } else if (instrumentsReceived === 1) {
+            headerColor = 'green'; // Exactly one result
+        } else {
+            headerColor = '#F4BB44'; // Partial results
+        }
+
+        // Collapse all existing results
+        $('.collapsible-results').each(function () {
+            $(this).find('.collapsible-content').slideUp(); // Collapse content
+            $(this).find('.fas').removeClass('fa-chevron-down').addClass('fa-chevron-right'); // Update icon
+        });
 
         let collapsibleWrapper = `
-            <div class="collapsible-results">
-                <div class="collapsible-header table-header" onclick="toggleCollapsible('${uniqueId}')">
-                    <table class="header-table" style="width: 100%; margin-bottom: 0;">
-                        <tr>
-                            <td style="width: 30%; text-align: left; font-size: 0.9em; color: #666; cursor: pointer;">
-                                <i class="fas fa-chevron-right"></i> Results
-                            </td>
-                                <td style="width: 20%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;">
+                <div class="collapsible-results">
+                    <div class="collapsible-header table-header" style="background-color: ${headerColor};" onclick="toggleCollapsible('${uniqueId}')">
+                        <table class="header-table" style="width: 100%; margin-bottom: 0;">
+                            <tr>
+                                <td style="width: 20%; text-align: left; font-size: 0.9em; color: #fff;">
+                                    <i class="fas fa-chevron-right"></i> Results
+                                </td>
+                                <td style="width: 10%; text-align: left; font-size: 0.9em; color: #fff;">
                                     <span>Template:</span>
                                 </td>
-                                <td style="width: 70%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;" 
+                                <td style="width: 40%; text-align: right; font-size: 0.9em; color: #fff;" 
                                     onclick="event.stopPropagation(); copyRowContentToClipboard(this)">
                                     ${templateInfo}
                                 </td>
-                            <td style="width: 30%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;">
-                                <span>Instruments:</span>
-                            </td>
-                            <td style="width: 70%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;"
-                                onclick="event.stopPropagation(); copyRowContentToClipboard(this)">
-                                ${instrumentsReceived}/${instrumentLimit}
-                            </td>
-                            <td style="width: 50%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;">
-                                <span>Correlation:</span>
-                            </td>
-                            <td style="width: 70%; text-align: right; font-size: 0.9em; color: #666; cursor: pointer;"
-                                onclick="event.stopPropagation(); copyRowContentToClipboard(this)">
-                                ${correlationId}
-                            </td>
-                        </tr>
-                    </table>
+                                <td style="width: 5%; text-align: right; font-size: 0.9em; color: #fff;">
+                                    <span>Instruments:</span>
+                                </td>
+                                <td style="width: 5%; text-align: right; font-size: 0.9em; color: #fff;"
+                                    onclick="event.stopPropagation(); copyRowContentToClipboard(this)">
+                                    ${instrumentsReceived}/${instrumentLimit}
+                                </td>
+                                <td style="width: 5%; text-align: right; font-size: 0.9em; color: #fff;">
+                                    <span>Correlation:</span>
+                                </td>
+                                <td style="width: 60%; text-align: right; font-size: 0.9em; color: #fff; cursor: pointer;"
+                                    onclick="event.stopPropagation(); copyRowContentToClipboard(this)">
+                                    ${correlationId}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div id="${uniqueId}" class="collapsible-content" style="display: none;">
+
+                <div id="${uniqueId}" class="collapsible-content" style="display: block;"> <!-- Changed this line -->
         `;
 
         let table = '<div class="table-responsive"><table style="table-layout: fixed;">';
@@ -634,7 +660,8 @@ function toggleCollapsible(sectionId) {
     const section = document.getElementById(sectionId);
     const header = section.previousElementSibling;
 
-    if (section.style.display === 'none') {
+    const isHidden = window.getComputedStyle(section).display === 'none';
+    if (isHidden) {
         section.style.display = 'block';
         header.classList.add('active');
     } else {
@@ -643,18 +670,32 @@ function toggleCollapsible(sectionId) {
     }
 }
 
-// Helper functions to create the nested tables for attributes and derived data
+// Helper function to create the nested tables for attributes and derived data
 function createAttributesTable(attributes) {
     if (!attributes) return 'N/A';
+
+    // Flattening the attributes
+    const flattenedAttributes = {};
+    for (const [key, value] of Object.entries(attributes)) {
+        if (value && typeof value === 'object') {
+            // If the value is an object, spread its properties directly
+            Object.entries(value).forEach(([nestedKey, nestedValue]) => {
+                flattenedAttributes[nestedKey] = nestedValue;
+            });
+        } else {
+            flattenedAttributes[key] = value;
+        }
+    }
+
     return `<table class="nested-table" style="font-size: 0.80em; width: 100%; table-layout: fixed;">
-                ${Object.entries(attributes)
-            .map(([key, value]) =>
-                `<tr onclick="copyRowContentToClipboard(this)">
-                            <td style="text-align: left; width: 40%; overflow: hidden; text-overflow: ellipsis;">${key}</td>
-                            <td style="text-align: right; width: 60%; overflow: hidden; text-overflow: ellipsis; word-break: break-word;">${value}</td>
-                         </tr>`
-            ).join('')}
-               </table>`;
+        ${Object.entries(flattenedAttributes)
+            .map(([key, value]) => `
+                <tr onclick="copyRowContentToClipboard(this)">
+                    <td style="text-align: left; width: 40%; overflow: hidden; text-overflow: ellipsis;">${key}</td>
+                    <td style="text-align: right; width: 60%; overflow: hidden; text-overflow: ellipsis;">${value}</td>
+                </tr>
+            `).join('')}
+    </table>`;
 }
 
 function createDerivedTable(derived) {
@@ -669,7 +710,6 @@ function createDerivedTable(derived) {
             ).join('')}
                </table>`;
 }
-
 
 // Function to check if a table has data and add/remove 'has-data' class accordingly
 function updateTableHoverEffect() {
@@ -807,6 +847,13 @@ function restorePreviousDynamicFieldValues() {
 
 const handledAttributes = [];
 
+function handleNotionalCurrencyChange(e) {
+    const selectedCurrency = e.params.data.id;
+    console.log("Selected NotionalCurrency: ", selectedCurrency);
+    filterReferenceRate(selectedCurrency); // Call the existing method 
+}
+
+
 
 function generateDynamicFields(data) {
     const dynamicFieldsDiv = $('#dynamicFields');
@@ -824,9 +871,9 @@ function generateDynamicFields(data) {
     const selectedAssetClass = $('#assetClass').val();
     const selectedInstrumentType = $('#instrumentType').val();
 
-
     const fieldHierarchy = JSON.parse(data.field_hierarchy)[0];
-    //console.log("Field hierarchy: ", fieldHierarchy);
+    console.log("Field hierarchy: ", fieldHierarchy);
+    const additionalData = JSON.parse(data.additional_data);
     const fieldsToAdd = [];
 
     // create horizontal div
@@ -929,6 +976,106 @@ function generateDynamicFields(data) {
     $('#find-button').css('display', 'block');
     $('#clear-results-button').css('display', 'block');
 
+    const allData = data; // Assuming 'data' is your parsed API response
+    console.log("All data received: ", allData);
+
+    // Validate NotionalCurrency and ReferenceRate
+    const notionalCurrencyField = allData?.attributes?.NotionalCurrency?.enumSpan;
+    if (!notionalCurrencyField) {
+        console.warn("NotionalCurrency is missing or its enumSpan is undefined.");
+    } else {
+        console.log("NotionalCurrency enumSpan: ", notionalCurrencyField);
+    }
+
+    const referenceRateField = allData?.attributes?.ReferenceRate?.enumSpan;
+    if (!referenceRateField) {
+        console.warn("ReferenceRate is missing or its enumSpan is undefined.");
+    } else {
+        console.log("ReferenceRate enumSpan: ", referenceRateField);
+    }
+
+    if (notionalCurrencyField && referenceRateField) {
+        console.log("Initializing select2 for NotionalCurrency and ReferenceRate...");
+        $(document).on('change', '[name="NotionalCurrency"]', function () {
+            const selectedValue = $(this).val();
+            console.log("Change event - Selected Value: ", selectedValue);
+            filterReferenceRate(selectedValue);
+        });
+
+        //$(document).on('select2:select', '[name="NotionalCurrency"]', function (e) {
+        //    const selectedValue = e.params.data.id;
+        //    console.log("Select2 event - Selected Value: ", selectedValue);
+        //    // Call your existing method or perform some actions
+        //});
+
+        // Initialize or update select2 for NotionalCurrency
+        //if (!$('#notionalCurrency').hasClass('select2-hidden-accessible')) {
+        //    console.log("Initializing select2 for NotionalCurrency...");
+        //    $('#notionalCurrency').select2({
+        //        //data: notionalCurrencyField.options,
+
+        //        width: '100%'
+
+        //    });
+        //    debugger;
+        //    if ($('#notionalCurrency').length) {     // Attach the select2:select event    
+        //        $(document).on('select2:select', '#notionalCurrency', handleSelectEvent);
+        //        // Attach the change event    
+        //        $(document).on('change', '#notionalCurrency', handleChangeEvent);
+        //    } else { console.error("The #notionalCurrency element does not exist."); }
+
+        //    debugger;
+        //} else {
+        //    console.log("Updating select2 data for NotionalCurrency...");
+        //    $('#notionalCurrency').select2('destroy').empty().select2({
+        //        data: notionalCurrencyField.options,
+        //        width: '100%'
+        //    });
+        //}
+
+        // Initialize or update select2 for ReferenceRate
+        if (!$('#referenceRate').hasClass('select2-hidden-accessible')) {
+            //console.log("Initializing select2 for ReferenceRate...");
+            $('#referenceRate').select2({
+                data: referenceRateField.options,
+                width: '100%'
+            });
+        } else {
+            //console.log("Updating select2 data for ReferenceRate...");
+            $('#referenceRate').select2('destroy').empty().select2({
+                data: referenceRateField.options,
+                width: '100%'
+            });
+        }
+        console.log("Selected NotionalCurrency: ", selectedCurrency);
+        debugger;
+
+        console.log(`ReferenceRates for ${selectedCurrency}:`, allData.additional_data.Rates.Swap.ReferenceRate[selectedCurrency]);
+
+        console.log("Options before filtering: ", referenceRateField.options);
+        console.log("Filtered options: ", filterReferenceRate(selectedCurrency));
+
+        // Function to filter ReferenceRate based on selected NotionalCurrency
+        function filterReferenceRate(selectedCurrency) {
+            console.log("Filtering ReferenceRate options based on selected NotionalCurrency: ", selectedCurrency);
+
+            const filteredOptions = allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency]
+                ? referenceRateField.options.filter(option =>
+                    allData.additional_data.Rates.Swap.ReferenceRate[selectedCurrency].includes(option.id))
+                : referenceRateField.options;
+
+            console.log("Filtered ReferenceRate options: ", filteredOptions);
+            console.log("Available rates for currency: ", allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency]);
+            console.log("Available ReferenceRates:", allData.additional_data.Rates.Swap.ReferenceRate);
+
+            $('#referenceRate').empty().select2({
+                data: filteredOptions,
+                width: '100%'
+            });
+        }
+    } else {
+        console.error("NotionalCurrency or ReferenceRate fields not found. Unable to initialize select2.");
+    }
 
 
     //const notHandledAttributes = Object.keys(data.attributes).filter(key => !dynamicFieldsDiv.find(`[name="${key}"]`).length);
