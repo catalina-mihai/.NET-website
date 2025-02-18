@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Catalina M\\source\\repos\\RegTech\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj": {}
+    "C:\\Users\\Catalina M\\source\\repository\\.NET-website\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Catalina M\\source\\repos\\RegTech\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj": {
+    "C:\\Users\\Catalina M\\source\\repository\\.NET-website\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Catalina M\\source\\repos\\RegTech\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj",
+        "projectUniqueName": "C:\\Users\\Catalina M\\source\\repository\\.NET-website\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj",
         "projectName": "RegTech.Web.OtcLookup",
-        "projectPath": "C:\\Users\\Catalina M\\source\\repos\\RegTech\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj",
+        "projectPath": "C:\\Users\\Catalina M\\source\\repository\\.NET-website\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\RegTech.Web.OtcLookup.csproj",
         "packagesPath": "C:\\Users\\Catalina M\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Catalina M\\source\\repos\\RegTech\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\obj\\",
+        "outputPath": "C:\\Users\\Catalina M\\source\\repository\\.NET-website\\RegTech.APIClient.OtcLookup\\RegTech.Web.OtcLookup\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

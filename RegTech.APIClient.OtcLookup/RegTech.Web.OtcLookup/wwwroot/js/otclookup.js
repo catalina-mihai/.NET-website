@@ -378,7 +378,6 @@ function performFind() {
 }
 
 function gatherDynamicFields() {
-    debugger;
     const dynamicFields = {};
     // Loop through all dynamically generated form fields
     $('#dynamicFields .form-group').each(function () {
@@ -850,7 +849,31 @@ const handledAttributes = [];
 function handleNotionalCurrencyChange(e) {
     const selectedCurrency = e.params.data.id;
     console.log("Selected NotionalCurrency: ", selectedCurrency);
-    filterReferenceRate(selectedCurrency); // Call the existing method 
+
+    // Check if the #referenceRate element exists, if not, create it
+    let referenceRateField = document.getElementById('referenceRate');
+    if (!referenceRateField) {
+        const dynamicFields = document.getElementById('dynamicFields');
+        referenceRateField = document.createElement('select');
+        referenceRateField.id = 'referenceRate';
+        dynamicFields.appendChild(referenceRateField);
+    }
+
+    // Call the existing method after ensuring the element exists
+    filterReferenceRate(selectedCurrency);
+}
+
+function filterReferenceRate(selectedCurrency) {
+    console.log("Selected NotionalCurrency:", selectedCurrency);
+    console.log("Filtering ReferenceRate options based on selected NotionalCurrency: ", selectedCurrency);
+
+    const referenceRateField = $('#referenceRate')[0]; // Get the DOM element
+    console.log("referencerate[0]: ", referenceRateField);
+    if (referenceRateField && referenceRateField.options && referenceRateField.options.length === 0) {
+        // Your existing code here
+    } else {
+        console.warn("#referenceRate select element does not exist or already has options.");
+    }
 }
 
 
@@ -975,6 +998,7 @@ function generateDynamicFields(data) {
 
     $('#find-button').css('display', 'block');
     $('#clear-results-button').css('display', 'block');
+    appendReferenceRateOptions(data);
 
     const allData = data; // Assuming 'data' is your parsed API response
     console.log("All data received: ", allData);
@@ -986,13 +1010,26 @@ function generateDynamicFields(data) {
     } else {
         console.log("NotionalCurrency enumSpan: ", notionalCurrencyField);
     }
-
     const referenceRateField = allData?.attributes?.ReferenceRate?.enumSpan;
-    if (!referenceRateField) {
-        console.warn("ReferenceRate is missing or its enumSpan is undefined.");
+
+    if (!Array.isArray(referenceRateField)) {
+        console.warn("ReferenceRate.enumSpan is missing or not an array.");
     } else {
         console.log("ReferenceRate enumSpan: ", referenceRateField);
+
+        // Check if #referenceRate exists and has options
+        const referenceRateSelect = $('#referenceRate')[0]; // Get the actual DOM element
+        if (referenceRateSelect && referenceRateSelect.options.length === 0) {
+            referenceRateField.forEach(rate => {
+                $('#referenceRate').append(new Option(rate, rate)); // Adds the options dynamically
+            });
+        } else {
+            console.warn("#referenceRate select element does not exist or already has options.");
+        }
     }
+
+
+
 
     if (notionalCurrencyField && referenceRateField) {
         console.log("Initializing select2 for NotionalCurrency and ReferenceRate...");
@@ -1048,7 +1085,6 @@ function generateDynamicFields(data) {
             });
         }
         console.log("Selected NotionalCurrency: ", selectedCurrency);
-        debugger;
 
         console.log(`ReferenceRates for ${selectedCurrency}:`, allData.additional_data.Rates.Swap.ReferenceRate[selectedCurrency]);
 
@@ -1057,21 +1093,64 @@ function generateDynamicFields(data) {
 
         // Function to filter ReferenceRate based on selected NotionalCurrency
         function filterReferenceRate(selectedCurrency) {
+            console.log("Selected NotionalCurrency:", selectedCurrency);
             console.log("Filtering ReferenceRate options based on selected NotionalCurrency: ", selectedCurrency);
 
-            const filteredOptions = allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency]
-                ? referenceRateField.options.filter(option =>
-                    allData.additional_data.Rates.Swap.ReferenceRate[selectedCurrency].includes(option.id))
-                : referenceRateField.options;
+            console.warn("#referenceRate select element does not exist or already has options.");
+
+            if (!referenceRateField || !referenceRateField.options) {
+                console.error("referenceRateField or referenceRateField.options is not properly initialized.");
+                return;
+            }
+            const availableRates = allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency];
+            if (!availableRates) {
+                console.warn(`No ReferenceRate found for currency: ${selectedCurrency}`);
+                return;
+            }
+            // Filter options based on available rates
+            const filteredOptions = Array.from(referenceRateField.options).filter(option =>
+                availableRates.includes(option.value)
+            );
 
             console.log("Filtered ReferenceRate options: ", filteredOptions);
+
+
+            // Parse additional_data if it's a string
+            if (typeof allData.additional_data === "string") {
+                try {
+                    allData.additional_data = JSON.parse(allData.additional_data);
+                    console.log("Parsed additional_data:", allData.additional_data);
+                } catch (error) {
+                    console.error("Failed to parse additional_data:", error);
+                    return;
+                }
+            }
+
+            // Get available rates for the selected currency
+            //const availableRates = allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency];
+            if (!availableRates) {
+                console.warn(`No ReferenceRate found for currency: ${selectedCurrency}`);
+                return;
+            }
+
+
+            console.log("Filtered ReferenceRate options: ", filteredOptions);
+            console.log("allData:", allData);
+            console.log("allData.additional_data:", allData?.additional_data);
+            console.log("allData.additional_data.Rates:", allData?.additional_data?.Rates);
+            console.log("allData.additional_data.Rates.Swap:", allData?.additional_data?.Rates?.Swap);
+
+            console.log("Filtered ReferenceRate options: ", filteredOptions);
+            console.log("referenceRateField:", referenceRateField);
+            console.log("referenceRateField.options:", referenceRateField.options);
             console.log("Available rates for currency: ", allData?.additional_data?.Rates?.Swap?.ReferenceRate?.[selectedCurrency]);
             console.log("Available ReferenceRates:", allData.additional_data.Rates.Swap.ReferenceRate);
-
+            // Update the select2 dropdown with filtered options
             $('#referenceRate').empty().select2({
-                data: filteredOptions,
+                data: filteredOptions.map(opt => ({ id: opt.value, text: opt.text })),
                 width: '100%'
             });
+
         }
     } else {
         console.error("NotionalCurrency or ReferenceRate fields not found. Unable to initialize select2.");
@@ -1095,7 +1174,28 @@ function generateDynamicFields(data) {
     //console.log("Not Handled Attributes: ", notHandledAttributes);
 
 }
+function appendReferenceRateOptions(data) {
+    const referenceRateField = data?.attributes?.ReferenceRate?.enumSpan;
 
+    if (!Array.isArray(referenceRateField)) {
+        console.warn("ReferenceRate.enumSpan is missing or not an array.");
+    } else {
+        console.log("ReferenceRate enumSpan: ", referenceRateField);
+
+        const referenceRateSelect = $('#referenceRate')[0];
+
+        if (!referenceRateSelect) {
+            console.error("The #referenceRate select element does not exist in the DOM.");
+        } else {
+            // Clear existing options and append new ones
+            $('#referenceRate').empty();
+            referenceRateField.forEach(rate => {
+                $('#referenceRate').append(new Option(rate, rate)); // Adds the options dynamically
+            });
+        }
+
+    }
+}
 
 
 function createSearchableDropdown(container, attributeKey, options) {

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RegTech.Web.OtcLookup")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97b9df4ca59aa1cbb015e0862b24b93f8e80538a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b7650f74f9ed7c16cc6f25f610181b6dde299b25")]
 [assembly: System.Reflection.AssemblyProductAttribute("RegTech.Web.OtcLookup")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RegTech.Web.OtcLookup")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

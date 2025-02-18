@@ -233,10 +233,16 @@ namespace RegTech.Web.OtcLookup.Controllers
 
                 // Load field hierarchy
                 var fieldHierarchy = LoadFieldHierarchy();
+                // Load additional data
+                var additionalData = LoadAdditionalData();
 
                 // Add field hierarchy to response JSON
                 if (fieldHierarchy != null)
                     responseJson["field_hierarchy"] = JToken.FromObject(fieldHierarchy);
+
+                // Add additional data to response JSON
+                if (additionalData != null)
+                    responseJson["additional_data"] = JToken.FromObject(additionalData);
 
                 // Return the response JSON
                 return Ok(responseJson.ToString());
@@ -337,10 +343,10 @@ namespace RegTech.Web.OtcLookup.Controllers
                     if (responseData["instrumentCount"].Value<int>() == 0)
                     {
                         var searchHeader = data.GetProperty("header");
-                        
+
                         // Get the original correlation from the response
                         var correlationId = response.Headers.FirstOrDefault(h => h.Name.Equals("x-correlation-id", StringComparison.OrdinalIgnoreCase))?.Value;
-                        
+
                         // Create a similar object for no instruments case
                         var noInstrumentsResponse = new RestResponse
                         {
@@ -397,6 +403,33 @@ namespace RegTech.Web.OtcLookup.Controllers
             {
                 _logger.LogError($"Error in Find: {ex.Message}");
                 return BadRequest(new { error = ex.Message });
+            }
+        }
+        private string LoadAdditionalData()
+        {
+            const string additionalDataPath = "additional_data.json";
+
+            if (!System.IO.File.Exists(additionalDataPath))
+            {
+                _logger.LogError("additional_data.json does not exist");
+                Console.Error.WriteLine("additional_data.json does not exist.");
+                return null;
+            }
+            try
+            {
+                var json = System.IO.File.ReadAllText(additionalDataPath);
+                _logger.LogInformation("additional_data.json loaded successfully.");
+                return json;
+            }
+            catch (JsonException e)
+            {
+                _logger.LogError($"JSON decoding error: {e.Message}");
+                return null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Unexpected error loading additional_data.json: {e.Message}");
+                return null;
             }
         }
 
